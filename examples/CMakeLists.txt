@@ -1,0 +1,4 @@
+add_executable(klyro_example basic.cpp)
+target_link_libraries(klyro_example PRIVATE klyro)
+klyro_enable_strict_warnings(klyro_example)
+klyro_enable_sanitizers(klyro_example)

@@ -1,0 +1,140 @@
+name: Release KlyroDB
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==2.16.2
+
+      - name: Build klyrodb wheels
+        run: python -m cibuildwheel --output-dir wheelhouse python/
+        env:
+          CIBW_SKIP: "pp* cp36-* cp37-* cp38-*"
+          CIBW_ENVIRONMENT_WINDOWS: "KLYRO_BUILD_PYTHON=ON"
+          CIBW_ENVIRONMENT_LINUX: "KLYRO_BUILD_PYTHON=ON"
+          CIBW_ENVIRONMENT_MACOS: "KLYRO_BUILD_PYTHON=ON"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Build sdist
+        run: |
+          python -m pip install build
+          python -m build --sdist python/
+          mkdir -p dist
+          mv python/dist/*.tar.gz dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+
+  publish_pypi:
+    name: Publish to PyPI
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/klyrodb
+    permissions:
+      id-token: write
+    if: github.event_name == 'release' && github.event.action == 'published'
+    
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  build_cpp:
+    name: Build C++ Library on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DKLYRO_BUILD_TESTS=OFF -DKLYRO_BUILD_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Package library (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir klyrodb-cpp-${{ runner.os }}
+          cp build/src/libklyro.a klyrodb-cpp-${{ runner.os }}/ 2>/dev/null || true
+          cp build/src/libklyro.so klyrodb-cpp-${{ runner.os }}/ 2>/dev/null || true
+          cp build/src/libklyro.dylib klyrodb-cpp-${{ runner.os }}/ 2>/dev/null || true
+          cp -r include klyrodb-cpp-${{ runner.os }}/
+          tar -czvf klyrodb-cpp-${{ runner.os }}.tar.gz klyrodb-cpp-${{ runner.os }}
+
+      - name: Package library (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir klyrodb-cpp-Windows
+          cp build/src/Release/klyro.lib klyrodb-cpp-Windows/ 2> $null || echo "No static lib"
+          cp build/src/Release/klyro.dll klyrodb-cpp-Windows/ 2> $null || echo "No dynamic lib"
+          cp -r include klyrodb-cpp-Windows/
+          Compress-Archive -Path klyrodb-cpp-Windows -DestinationPath klyrodb-cpp-Windows.zip
+
+      - name: Upload Release Asset (Unix)
+        if: runner.os != 'Windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: klyrodb-cpp-${{ runner.os }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset (Windows)
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: klyrodb-cpp-Windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
