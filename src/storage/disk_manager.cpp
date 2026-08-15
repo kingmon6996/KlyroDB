@@ -12,7 +12,7 @@ DiskManager::DiskManager(const Config& config)
     : m_config(config), m_db_header{} {}
 
 DiskManager::~DiskManager() {
-    auto _ = close();
+    (void)close();
 }
 
 DiskManager::DiskManager(DiskManager&& other) noexcept
@@ -27,7 +27,7 @@ DiskManager::DiskManager(DiskManager&& other) noexcept
 
 DiskManager& DiskManager::operator=(DiskManager&& other) noexcept {
     if (this != &other) {
-        auto _ = close();
+        (void)close();
         m_config = std::move(other.m_config);
         m_db_header = std::move(other.m_db_header);
         m_file_manager = std::move(other.m_file_manager);

@@ -39,7 +39,7 @@ public:
     
     void release() {
         if (m_owns_lock && m_manager) {
-            auto _ = m_manager->unlock(m_txn_id, m_resource); // Ignore errors on destructor
+            (void)m_manager->unlock(m_txn_id, m_resource); // Ignore errors on destructor
             m_owns_lock = false;
         }
     }
