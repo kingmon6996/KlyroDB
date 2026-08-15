@@ -33,6 +33,9 @@ jobs:
           CIBW_ENVIRONMENT_WINDOWS: "KLYRO_BUILD_PYTHON=ON"
           CIBW_ENVIRONMENT_LINUX: "KLYRO_BUILD_PYTHON=ON"
           CIBW_ENVIRONMENT_MACOS: "KLYRO_BUILD_PYTHON=ON"
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

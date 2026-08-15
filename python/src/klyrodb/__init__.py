@@ -7,7 +7,7 @@ from .errors import (
 )
 from .logging import LoggingConfig, configure_logging, enable_debug
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "open", "Database", 
     "SyncConnection", "SyncConnectionPool", "SyncPreparedStatement", "SyncResult", "SyncTransaction",
