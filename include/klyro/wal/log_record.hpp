@@ -20,15 +20,15 @@ public:
 
     // Transaction state constructor
     LogRecord(transaction::TransactionID txn_id, LogRecordType type, LSN prev_lsn)
-        : m_txn_id(txn_id), m_type(type), m_prev_lsn(prev_lsn) {}
+        : m_txn_id(txn_id), m_prev_lsn(prev_lsn), m_type(type) {}
 
     // Generic physical record constructor
     LogRecord(transaction::TransactionID txn_id, LogRecordType type, LSN prev_lsn, std::vector<std::uint8_t> payload)
-        : m_txn_id(txn_id), m_type(type), m_prev_lsn(prev_lsn), m_payload(std::move(payload)) {}
+        : m_txn_id(txn_id), m_prev_lsn(prev_lsn), m_type(type), m_payload(std::move(payload)) {}
 
     // CLR constructor
     LogRecord(transaction::TransactionID txn_id, LogRecordType type, LSN prev_lsn, LSN undo_next_lsn, std::vector<std::uint8_t> payload)
-        : m_txn_id(txn_id), m_type(type), m_prev_lsn(prev_lsn), m_undo_next_lsn(undo_next_lsn), m_payload(std::move(payload)) {}
+        : m_txn_id(txn_id), m_prev_lsn(prev_lsn), m_undo_next_lsn(undo_next_lsn), m_type(type), m_payload(std::move(payload)) {}
 
     LSN get_lsn() const { return m_lsn; }
     void set_lsn(LSN lsn) { m_lsn = lsn; }

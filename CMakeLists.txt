@@ -10,8 +10,8 @@ project(
 # KlyroDB Options and strict compilation flags
 include(cmake/KlyroDBOptions.cmake)
 
-# Ensure C++20 is used
-set(CMAKE_CXX_STANDARD 20)
+# Ensure C++23 is used
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

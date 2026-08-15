@@ -29,11 +29,11 @@ public:
     }
 
     // Accessors
-    T& value() {
+    T& value() & {
         return m_expected.value();
     }
 
-    const T& value() const {
+    const T& value() const & {
         return m_expected.value();
     }
     

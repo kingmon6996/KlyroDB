@@ -7,7 +7,7 @@
 namespace klyro::storage {
 
 BufferPool::BufferPool(std::size_t pool_size, DiskManager* disk_manager, wal::WALManager* wal_manager)
-    : m_pool_size(pool_size), m_disk_manager(disk_manager), m_wal_manager(wal_manager) {
+    : m_disk_manager(disk_manager), m_wal_manager(wal_manager), m_pool_size(pool_size) {
     
     m_frames.resize(pool_size);
     m_replacer = std::make_unique<ClockReplacer>(m_pool_size);
