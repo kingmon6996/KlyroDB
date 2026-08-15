@@ -34,8 +34,10 @@ inline void write_u64_le(std::span<std::byte> buffer, std::size_t offset, std::u
 }
 
 inline std::uint16_t read_u16_le(std::span<const std::byte> buffer, std::size_t offset) noexcept {
-    return static_cast<std::uint16_t>(buffer[offset]) |
-           (static_cast<std::uint16_t>(buffer[offset + 1]) << 8);
+    return static_cast<std::uint16_t>(
+        static_cast<std::uint16_t>(buffer[offset]) |
+        (static_cast<std::uint16_t>(buffer[offset + 1]) << 8)
+    );
 }
 
 inline std::uint32_t read_u32_le(std::span<const std::byte> buffer, std::size_t offset) noexcept {

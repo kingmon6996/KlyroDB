@@ -36,8 +36,6 @@ void BufferPool::unpin_page(FrameID frame_id) noexcept {
 
 Result<PageHandle> BufferPool::fetch_page(PageID page_id) {
     FrameID frame_id;
-    bool is_hit = false;
-
     {
         std::lock_guard<std::mutex> lock(m_page_table_mutex);
         auto it = m_page_table.find(page_id);
@@ -45,7 +43,6 @@ Result<PageHandle> BufferPool::fetch_page(PageID page_id) {
         if (it != m_page_table.end()) {
             // CACHE HIT
             frame_id = it->second;
-            is_hit = true;
             m_stats.cache_hits.fetch_add(1, std::memory_order_relaxed);
             
             // Pin it while under page table lock to prevent eviction racing
