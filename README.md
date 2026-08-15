@@ -1,5 +1,8 @@
 # KlyroDB
 
+## Documentation
+For comprehensive guides, tutorials, and full API references, please check our official documentation.
+
 ## Overview
 KlyroDB is an embedded, local relational database written in modern C++20. It is engineered to be a highly-concurrent alternative to SQLite. By implementing Multi-Version Concurrency Control (MVCC) and fine-grained page locking, KlyroDB allows multiple readers and multiple writers simultaneously without deadlocks or database-level locks. It provides a rich set of data types including JSON, ARRAY, and DICT, similar in philosophy to PostgreSQL but completely local and network-independent.
 
@@ -134,16 +137,10 @@ KlyroDB uses the `JSON` type for schema-less data.
 KlyroDB offers a rich native C++ API using RAII for memory and transaction safety. The Python SDK delegates to this C++ engine via PyBind11.
 
 ## Python SDK
-The Python SDK exposes a unified interface: `import klyrodb`.
+The Python SDK exposes a unified interface containing both synchronous and asynchronous APIs: `import klyrodb`.
 
-## klyrodb-sync
-Installed via `pip install klyrodb-sync`.
-Provides synchronous database interactions perfect for scripts and standard data ingestion tasks.
-
-## klyrodb-async
-Installed via `pip install klyrodb-async`.
-*(Note: Do not normally install both into the same environment.)*
-Provides `asyncio` compatible operations using native worker threads.
+Installed via `pip install klyrodb`.
+This single package provides both synchronous database interactions (perfect for scripts and standard data ingestion tasks) and `asyncio` compatible operations using native worker threads.
 
 ## Logging
 KlyroDB integrates fully with Python's standard `logging` module. 
@@ -262,9 +259,7 @@ make
 
 ## Installation
 ```bash
-pip install klyrodb-sync
-# OR
-pip install klyrodb-async
+pip install klyrodb
 ```
 
 ## License
