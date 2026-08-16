@@ -40,7 +40,7 @@ klyro_add_test(buffer_pool_benchmark storage/buffer_pool_benchmark.cpp)
 # Type tests
 klyro_add_test(type_value_test types/value_test.cpp)
 
-klyro_add_executable(record_serialization_test storage/record_serialization_test.cpp)
+add_executable(record_serialization_test storage/record_serialization_test.cpp)
 target_link_libraries(record_serialization_test PRIVATE klyro_core GTest::gtest_main)
 add_test(NAME RecordSerializationTest COMMAND record_serialization_test)
 

@@ -125,7 +125,7 @@ Decimal Decimal::operator/(const Decimal& other) const {
     }
     
     std::int64_t res = c1 / other.m_coefficient;
-    std::uint8_t target_scale = m_scale + extra_precision - other.m_scale;
+    std::uint8_t target_scale = static_cast<std::uint8_t>(m_scale + extra_precision - other.m_scale);
     
     return Decimal(res, target_scale);
 }
