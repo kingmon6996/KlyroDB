@@ -48,56 +48,7 @@ Json Json::parse(const std::string& str) {
     // Placeholder for actual parsing logic.
     // For Module 4, we just treat unparsed JSON as a string node wrapper.
     return Json(JsonNode(str));
-#include "klyro/types/json.hpp"
-#include <sstream>
 
-namespace klyro::types {
-
-std::string JsonNode::to_string() const {
-    switch (m_type) {
-        case Type::Null: return "null";
-        case Type::Boolean: return m_bool ? "true" : "false";
-        case Type::Number: return std::to_string(m_num);
-        case Type::String: return "\"" + m_str + "\"";
-        case Type::Array: {
-            std::string res = "[";
-            for (size_t i = 0; i < m_arr.size(); ++i) {
-                res += m_arr[i].to_string();
-                if (i + 1 < m_arr.size()) res += ",";
-            }
-            return res + "]";
-        }
-        case Type::Object: {
-            std::string res = "{";
-            bool first = true;
-            for (const auto& [k, v] : m_obj) {
-                if (!first) res += ",";
-                res += "\"" + k + "\":" + v.to_string();
-                first = false;
-            }
-            return res + "}";
-        }
-    }
-    return "null";
-}
-
-bool operator==(const JsonNode& lhs, const JsonNode& rhs) {
-    if (lhs.type() != rhs.type()) return false;
-    switch (lhs.type()) {
-        case JsonNode::Type::Null: return true;
-        case JsonNode::Type::Boolean: return lhs.get_boolean() == rhs.get_boolean();
-        case JsonNode::Type::Number: return lhs.get_number() == rhs.get_number();
-        case JsonNode::Type::String: return lhs.get_string() == rhs.get_string();
-        case JsonNode::Type::Array: return lhs.get_array() == rhs.get_array();
-        case JsonNode::Type::Object: return lhs.get_object() == rhs.get_object();
-    }
-    return false;
-}
-
-Json Json::parse(const std::string& str) {
-    // Placeholder for actual parsing logic.
-    // For Module 4, we just treat unparsed JSON as a string node wrapper.
-    return Json(JsonNode(str));
 }
 
 bool Json::operator==(const Json& other) const {

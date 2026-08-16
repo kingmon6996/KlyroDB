@@ -15,6 +15,7 @@
 namespace klyro::types {
 
 class Array; // Forward declare Array
+class Dict;  // ADD THIS LINE
 
 // The central Value representation for KlyroDB.
 class Value {

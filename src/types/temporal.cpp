@@ -19,7 +19,6 @@ void days_to_ymd(std::int32_t days_since_2000, int& year, int& month, int& day) 
     
     // Note: C++20 chrono has year_month_day and sys_days
     // 2000-01-01 is 10957 days after 1970-01-01.
-    std::int32_t days_since_1970 = days_since_2000 + 10957;
     
     // Manual basic conversion for now to avoid C++20 chrono library issues on some older compilers.
     // This is approximate and only for formatting the basic tests right now.
@@ -32,12 +31,12 @@ void days_to_ymd(std::int32_t days_since_2000, int& year, int& month, int& day) 
 }
 
 void micros_to_hms(std::int64_t micros, int& h, int& m, int& s, int& us) {
-    us = micros % 1000000;
+    us = static_cast<int>(micros % 1000000);
     auto secs = micros / 1000000;
-    s = secs % 60;
+    s = static_cast<int>(secs % 60);
     auto mins = secs / 60;
-    m = mins % 60;
-    h = mins / 60;
+    m = static_cast<int>(mins % 60);
+    h = static_cast<int>(mins / 60);
 }
 
 }

@@ -84,7 +84,7 @@ Value Array::pop() {
 
 void Array::remove(std::size_t index) {
     if (!m_impl || index >= m_impl->elements.size()) throw std::out_of_range("Index out of bounds");
-    m_impl->elements.erase(m_impl->elements.begin() + index);
+    m_impl->elements.erase(m_impl->elements.begin() + static_cast<std::ptrdiff_t>(index));
 }
 
 void Array::clear() {
