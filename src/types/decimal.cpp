@@ -145,7 +145,9 @@ std::string Decimal::to_string() const {
         s = std::string(m_scale - s.length() + 1, '0') + s;
     }
 
-    s.insert(s.length() - m_scale, ".");
+    if (s.length() > m_scale) {
+        s.insert(s.length() - m_scale, ".");
+    }
     return (m_coefficient < 0 ? "-" : "") + s;
 }
 

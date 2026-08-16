@@ -134,7 +134,7 @@ void Json::set(const std::string& path, const Json& value) {
     }
 }
 
-bool Json::remove(const std::string& [[maybe_unused]] path) {
+bool Json::remove(const std::string& /*path*/) {
     // Simple remove: requires parent. Not implementing full parent resolution for now.
     // Returning false if unsupported.
     return false; 
